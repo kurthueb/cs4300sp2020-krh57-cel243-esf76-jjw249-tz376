@@ -55,14 +55,16 @@ body {
     background-color:#fff;
     display:none;
     position:absolute;
-    min-width:160px;
+    width:400px;
+    max-height: 800px;
+    overflow-y: scroll;
     margin:0;
     padding:0;
-    z-index:1
+    z-index:1;
 }
 
 .recommendation-hover-card th {
-    background-color: #c3b7a0;
+    background-color: #9c8d71;
     color: white;
 }
 
@@ -80,11 +82,24 @@ body {
     padding: 4px;
     text-align: center;
 }
-.liked-input-table {
+.recommendation-hover-card table {
     margin: 10px;
 }
 .disliked-input-table {
-    margin: 10px;
+    float: right;
+}
+.liked-input-table {
+    float: left;
+}
+table {
+    width: 45%;
+}
+.sim-blurb {
+    font-weight: bolder;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    background-color: #96886c;
+    color: white;
 }
 
 .recommendation-info:hover .recommendation-hover-card{

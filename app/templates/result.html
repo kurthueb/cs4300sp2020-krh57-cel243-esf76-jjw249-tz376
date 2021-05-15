@@ -116,6 +116,7 @@
 
                 var recommendation_info_card = $("<div class=\"recommendation-hover-card rec-card\" >")
                 const book_sim_table = gen_sim_score_table(book);
+                recommendation_info_card.append("<div class=\"sim-blurb\">According to Goodreads book reviews, we computed the following similarity scores between " + book.title + " and your inputs:</div>");
                 recommendation_info_card.append(book_sim_table);
                 recommendation_info.append(recommendation_info_card)
 
