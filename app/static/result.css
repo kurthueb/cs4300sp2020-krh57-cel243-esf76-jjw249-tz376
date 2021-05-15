@@ -25,9 +25,76 @@ body {
 }
 
 .book:hover {
-    background-color: #af9e7e;
+    background-color: #c3b7a0;
     color: white;
 }
+
+.book:hover .recommendation-info u {
+    border-bottom:1px dashed #ffffff;
+    text-decoration: none;
+}
+
+.book:hover .recommendation-info {
+    color: white;
+}
+
+.recommendation-info u {
+    border-bottom:1px dashed #af9e7e;
+    text-decoration: none;
+}
+
+.recommendation-info {
+    padding: 6px 0px 0px 0px;
+    font-size: 14px;
+    color: #af9e7e;
+}
+
+.recommendation-hover-card {
+    cursor:auto;
+    color:#000;
+    background-color:#fff;
+    display:none;
+    position:absolute;
+    min-width:160px;
+    margin:0;
+    padding:0;
+    z-index:1
+}
+
+.recommendation-hover-card th {
+    background-color: #c3b7a0;
+    color: white;
+}
+
+.recommendation-hover-card .table-row-0 {
+    background-color: white;
+    color: black;
+}
+.recommendation-hover-card .table-row-1 {
+    background-color: #f3f2e7;
+    color: black;
+}
+.recommendation-hover-card table, th, td {
+    border: 1px solid #c3b7a0;
+    border-collapse: collapse;
+    padding: 4px;
+    text-align: center;
+}
+.liked-input-table {
+    margin: 10px;
+}
+.disliked-input-table {
+    margin: 10px;
+}
+
+.recommendation-info:hover .recommendation-hover-card{
+    display:block;
+}
+
+.rec-card {
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
+}
+
 
 .book-cover {
     align-self: center;
@@ -46,6 +113,7 @@ body {
 .book-author {
     font-size: large;
 }
+
 
 .book-inspect-bg {
     display: none;

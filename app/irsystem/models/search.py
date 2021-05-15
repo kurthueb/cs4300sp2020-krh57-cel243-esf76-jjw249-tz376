@@ -129,7 +129,8 @@ def get_doc_rankings(work_ids, eligible, auth_ids, work_mat, auth_mat, works):
             "ranking":i+1,
             "book_url":work_data["url"],
             "image_url":work_data["image"],
-            "description":work_data["description"]
+            "description":work_data["description"],
+            "input_sims":[{"liked": True, "title": "Book 1", "score": 0.85}, {"liked": True, "title": "Jane Austen", "score": 0.5}, {"liked": False, "title": "this is a really really long title", "score": -0.3}] ## SORT BY HIGHEST SIM TO LOWEST SIM
         }
         final_results_list.append(rankings_data_dict)
     return final_results_list

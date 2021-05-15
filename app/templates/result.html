@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="/static/assets/logo.png"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="/static/assets/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<title>BookClub</title>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-	<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../static/result.css">
+    <title>BookClub</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../static/result.css">
 </head>
+
 <body>
     <div id="pageDisplay">
         <h1>Here's what you should read next!</h1>
@@ -19,7 +23,7 @@
         </div>
         <div id="centerButton">
             <button id="showMore">Show More</button>
-        </div> 
+        </div>
     </div>
 
     <script>
@@ -49,8 +53,42 @@
             var seemore = $("<a class=\"book-link\" href=\"" + book.book_url + "\">See more on Goodreads</a>");
             book_inspect.append(seemore);
             book_inspect_bg.append(book_inspect);
-            
+
             return book_inspect_bg;
+        }
+
+        const gen_sim_score_table = (book) => {
+            var book_table_div = $("<div class=\"book-table\">");
+
+            var liked_input_table = $("<table class=\"liked-input-table\">");
+            var liked_table_header = $("<tr class=\"liked-table-header\">");
+            liked_table_header.append("<th colspan=\"2\">Similarity With Liked Inputs</th>");
+            liked_input_table.append(liked_table_header);
+
+            var disliked_input_table = $("<table class=\"disliked-input-table\">");
+            var disliked_table_header = $("<tr class=\"disliked-table-header\">");
+            disliked_table_header.append("<th colspan=\"2\">Similarity With Disliked Inputs</th>");
+            disliked_input_table.append(disliked_table_header);
+
+            const NUM_INPUTS = book.input_sims.length;
+            for (var i = 0; i < NUM_INPUTS; i++) {
+                console.log(i);
+                console.log(book.input_sims[i]);
+                var table_row = $("<tr class=\"table-row-1\">");
+                if (i % 2 == 0) {
+                    table_row = $("<tr class=\"table-row-0\">");
+                }
+                table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "</td>");
+                if (book.input_sims[i].liked) {
+                    liked_input_table.append(table_row);
+                } else {
+                    disliked_input_table.append(table_row);
+                }
+            }
+            book_table_div.append(liked_input_table);
+            book_table_div.append(disliked_input_table);
+
+            return book_table_div;
         }
 
         const gen_book_cards = (book_data, all_books) => {
@@ -73,6 +111,16 @@
                 summary.append(book.description);
                 book_display.append(summary);
 
+                var recommendation_info = $("<div class=\"recommendation-info\">");
+                recommendation_info.append("<u>Why this book?</u>")
+
+                var recommendation_info_card = $("<div class=\"recommendation-hover-card rec-card\" >")
+                const book_sim_table = gen_sim_score_table(book);
+                recommendation_info_card.append(book_sim_table);
+                recommendation_info.append(recommendation_info_card)
+
+                book_display.append(recommendation_info)
+
                 const book_inspect = gen_inspect_page(book);
                 $(book_display).click(() => {
                     $(book_inspect).show();
@@ -85,22 +133,22 @@
             return all_books;
         }
 
-        $(function() {
+        $(function () {
             var data = sessionStorage.getItem("result");
-            if(data) {
+            if (data) {
                 console.log("Results found: ");
                 console.log(data);
                 var book_data = JSON.parse(data);
                 console.log(book_data);
                 var all_books = $("<div class=\"all-books\">");
-                all_books = gen_book_cards(book_data,all_books);
+                all_books = gen_book_cards(book_data, all_books);
                 $("#bookDisplay").append(all_books);
-                
+
                 $("#showMore").click(() => {
-                    var add_books = gen_book_cards(book_data,all_books);
+                    var add_books = gen_book_cards(book_data, all_books);
                     $("#bookDisplay").append(add_books);
                 })
-                
+
             }
             else {
                 console.log("No results found!");
@@ -109,4 +157,5 @@
         });
     </script>
 </body>
+
 </html>
