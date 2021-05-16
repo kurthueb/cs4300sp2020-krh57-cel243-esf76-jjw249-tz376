@@ -62,12 +62,12 @@
 
             var liked_input_table = $("<table class=\"liked-input-table\">");
             var liked_table_header = $("<tr class=\"liked-table-header\">");
-            liked_table_header.append("<th colspan=\"2\">Similarity With Liked Inputs</th>");
+            liked_table_header.append("<th colspan=\"2\">Percent Match With Inputs You Liked</th>");
             liked_input_table.append(liked_table_header);
 
             var disliked_input_table = $("<table class=\"disliked-input-table\">");
             var disliked_table_header = $("<tr class=\"disliked-table-header\">");
-            disliked_table_header.append("<th colspan=\"2\">Similarity With Disliked Inputs</th>");
+            disliked_table_header.append("<th colspan=\"2\">Percent Match With Inputs You Disliked</th>");
             disliked_input_table.append(disliked_table_header);
 
             const NUM_INPUTS = book.input_sims.length;
@@ -78,7 +78,7 @@
                 if (i % 2 == 0) {
                     table_row = $("<tr class=\"table-row-0\">");
                 }
-                table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "</td>");
+                table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "%</td>");
                 if (book.input_sims[i].liked) {
                     liked_input_table.append(table_row);
                 } else {
@@ -116,7 +116,7 @@
 
                 var recommendation_info_card = $("<div class=\"recommendation-hover-card rec-card\" >")
                 const book_sim_table = gen_sim_score_table(book);
-                recommendation_info_card.append("<div class=\"sim-blurb\">According to Goodreads book reviews, we computed the following similarity scores between " + book.title + " and your inputs:</div>");
+                recommendation_info_card.append("<div class=\"sim-blurb\">Using Goodreads book reviews, we computed the following percent similarity between <i>" + book.title + "</i> and your inputs:</div>");
                 recommendation_info_card.append(book_sim_table);
                 recommendation_info.append(recommendation_info_card)
 
