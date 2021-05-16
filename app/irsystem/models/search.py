@@ -2,14 +2,14 @@ import math
 import json
 from collections import defaultdict
 import numpy as np
-def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_query_works, query_works, positive_query_authors):
+def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_query_works, query_works, positive_query_authors, query_authors, works, authors):
     """Returns a list of work ids ranked by similarity to a query. Does not use formal cosine similarity due to the omission of normalizing by the doc norm. 
 
     Arguments
     =========
 
     joined_queries: np matrix,
-        A vector representing the joined queries and author preferences
+        A vector representing the joined queries and author preferences. This is what is used to calculate overall similarity
 
     Returns
     ======
@@ -17,6 +17,7 @@ def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_que
         ranked_results[i] = work id of the i'th most relevant work
     """
     results = []
+
     similarity_scores = np.matmul(work_mat, joined_queries)
     for i in np.argsort(-similarity_scores):
         if i in eligible and i not in query_works:
@@ -44,13 +45,28 @@ def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_que
             val = np.dot(auth_mat[query], work_mat[work])
             cosine_sims.append(penalize(val))
         reordered_results.append((work, np.mean(np.array(cosine_sims))))
-        # various experiments:
-        # reordered_results.append((work, np.quantile(np.array(cosine_sims), 0.25)))
-        # reordered_results.append((work, np.median(np.array(cosine_sims))))
-        # reordered_results.append((work, np.min(np.array(cosine_sims))))
     reordered_results.sort(key=lambda x: x[1], reverse=True)
-    return reordered_results
 
+    scores_by_query = {}
+    for work, score in reordered_results:
+        scores_by_query[work] = []
+        for query_id in query_works:
+            raw_similarity = np.dot(work_mat[query_id], work_mat[work])
+            raw_similarity = math.floor((raw_similarity - (-1))/2*100)
+            liked_or_disliked = query_id in positive_query_works
+            title = works[work]["title"]
+            scores_by_query[work].append({"liked": liked_or_disliked, "title": title, "score": raw_similarity})
+
+        for author_id in query_authors:
+            raw_similarity = np.dot(auth_mat[author_id], work_mat[work])
+            raw_similarity = math.floor((raw_similarity - (-1))/2*100)
+            liked_or_disliked = author_id in positive_query_authors
+            author = authors[author_id]
+            scores_by_query[work].append({"liked": liked_or_disliked, "title": author, "score": raw_similarity})
+
+        scores_by_query[work].sort(key=lambda x: x["score"], reverse=True)
+        
+    return reordered_results, scores_by_query
 
 def combine_queries(work_ids, auth_ids, work_mat, auth_mat, works):
     """
@@ -92,7 +108,7 @@ def combine_queries(work_ids, auth_ids, work_mat, auth_mat, works):
     return combined_queries
 
 
-def get_doc_rankings(work_ids, eligible, auth_ids, work_mat, auth_mat, works):
+def get_doc_rankings(work_ids, eligible, auth_ids, work_mat, auth_mat, works, authors):
     """Returns a dictionary of terms and tf-idf values representing the combined result of individual queries
 
     Arguments
@@ -109,16 +125,19 @@ def get_doc_rankings(work_ids, eligible, auth_ids, work_mat, auth_mat, works):
     positive_query_works = []
     positive_query_authors = []
     query_works = []
+    query_authors = []
     for query in work_ids:
         if query["score"] > 0:
             positive_query_works.append(query["work_id"])
         query_works.append(query["work_id"])
+
     for query in auth_ids:
         if query["score"] > 0:
             positive_query_authors.append(query["auth_id"])
-
+        query_authors.append(query["auth_id"])
     joined_queries = combine_queries(work_ids, auth_ids, work_mat, auth_mat, works)
-    ranked_results = cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_query_works, query_works, positive_query_authors)
+    ranked_results, scores_by_query = cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_query_works, query_works, positive_query_authors, query_authors, works, authors)
+
 
     final_results_list = []
     for i, result in enumerate(ranked_results[:100]):
@@ -130,7 +149,7 @@ def get_doc_rankings(work_ids, eligible, auth_ids, work_mat, auth_mat, works):
             "book_url":work_data["url"],
             "image_url":work_data["image"],
             "description":work_data["description"],
-            "input_sims":[{"liked": True, "title": "Book 1", "score": 85}, {"liked": True, "title": "Jane Austen", "score": 30}, {"liked": False, "title": "this is a really really long title", "score": 5}] ## SORT BY HIGHEST SIM TO LOWEST SIM
+            "input_sims": scores_by_query[result[0]]
         }
         final_results_list.append(rankings_data_dict)
     return final_results_list

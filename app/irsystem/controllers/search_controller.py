@@ -110,7 +110,8 @@ def _get_reccs(work_ids, auth_ids, desired_genres, excluded_genres):
 		auth_ids,
 		data_pool.data['work_mat'],
 		data_pool.data['auth_mat'],
-		data_pool.data['works']
+		data_pool.data['works'],
+		data_pool.data['authors']
 	)
 	for r in results:
 		r['author'] = ", ".join(r['author'])
