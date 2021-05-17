@@ -45,7 +45,10 @@ def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_que
         for query in positive_query_authors:
             val = np.dot(auth_mat[query], work_mat[work])
             cosine_sims.append(penalize(val))
-        reordered_results.append((work, np.mean(np.array(cosine_sims))))
+        if len(cosine_sims) > 0:
+            reordered_results.append((work, np.mean(np.array(cosine_sims))))
+        else:
+            reordered_results.append((work, 0.0))
     reordered_results.sort(key=lambda x: x[1], reverse=True)
 
     # keep track of raw scores to show user

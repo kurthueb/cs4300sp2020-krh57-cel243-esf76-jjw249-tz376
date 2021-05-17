@@ -28,11 +28,13 @@ body {
 .book:hover {
     background-color: #c3b7a0;
     color: white;
+    transition: 0.2s;
 }
 
 .book:hover .recommendation-info u {
     border-bottom:1px dashed #ffffff;
     text-decoration: none;
+    transition: 0.2s;
 }
 
 .book:hover .recommendation-info {
@@ -54,11 +56,13 @@ body {
     cursor:auto;
     color:#000;
     background-color:#fff;
-    display:none;
+  visibility: hidden;
+  opacity: 0;
+
     position: absolute;
     bottom: 10%;
     width: 400px;
-    max-height: 600px;
+    max-height: 350px;
     overflow-y: scroll;
     margin:0;
     padding:0;
@@ -124,7 +128,11 @@ body {
 }
 
 .recommendation-info:hover .recommendation-hover-card{
-    display:block;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
+   -moz-transition: opacity 200ms ease-in-out;
+   -webkit-transition: opacity 200ms ease-in-out;
 }
 
 .rec-card {
