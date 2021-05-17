@@ -24,8 +24,8 @@ def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_que
             results.append((i, similarity_scores[i]))
         if len(results)==100:
             break
-    if len(positive_query_works) == 0 and len(positive_query_authors) == 0:
-        return results       
+    # if len(positive_query_works) == 0 and len(positive_query_authors) == 0:
+    #     return results       
 
     def penalize(val):
         if val>0:
