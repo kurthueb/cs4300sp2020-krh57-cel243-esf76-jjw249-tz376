@@ -86,7 +86,11 @@ body {
     text-align: center;
 }
 .recommendation-hover-card table {
-    margin: 10px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    margin-bottom: 3%;
 }
 .disliked-input-table {
     float: right;
