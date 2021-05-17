@@ -4,6 +4,7 @@ from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app import app as data_pool
 import json
 from app.irsystem.models.search import get_doc_rankings
+from collections import defaultdict
 #import os
 #import psutil
 project_name = "Book Club"
@@ -84,14 +85,13 @@ def rescore(inputs, idid):
 	"""Given some inputs in form [{work_id: stars}], rescale and
 	return rescored inpust in form [{`idid`: work_id, "score": score}]"""
 	rescale = {1: -1, 2: -0.5, 3: 0.5, 4: 1, 5: 2}
-	rescored = []
+	collapsed_inputs = defaultdict(float)
 	for i in inputs:
 		iid, stars = list(i.items())[0]
-		if type(iid)==str:
-			iid = int(iid)
-		if type(stars)==str:
-			stars = int(stars)
-		rescored.append({idid: iid, "score": rescale.get(stars, 0)})
+		collapsed_inputs[int(iid)] += rescale.get(int(stars), 0)
+	rescored = []
+	for iid, score in collapsed_inputs.items():
+		rescored.append({idid: iid, "score": score})
 	return rescored
 
 def _get_reccs(work_ids, auth_ids, desired_genres, excluded_genres):
