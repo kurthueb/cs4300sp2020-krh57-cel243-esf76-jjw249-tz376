@@ -71,31 +71,34 @@
             disliked_input_table.append(disliked_table_header);
 
             const NUM_INPUTS = book.input_sims.length;
-            var liked_inputs = false;
-            var disliked_inputs = false;
+            var liked_inputs = 0;
+            var disliked_inputs = 0;
             for (var i = 0; i < NUM_INPUTS; i++) {
-                console.log(i);
-                console.log(book.input_sims[i]);
-                var table_row = $("<tr class=\"table-row-1\">");
-                if (i % 2 == 0) {
-                    table_row = $("<tr class=\"table-row-0\">");
-                }
-                table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "%</td>");
                 if (book.input_sims[i].liked) {
-                    liked_inputs = true;
+                    var table_row = $("<tr class=\"table-row-1\">");
+                    if (liked_inputs % 2 == 0) {
+                        table_row = $("<tr class=\"table-row-0\">");
+                    }
+                    table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "%</td>");
+                    liked_inputs += 1;
                     liked_input_table.append(table_row);
                 } else {
-                    disliked_inputs = true;
+                    var table_row = $("<tr class=\"table-row-1\">");
+                    if (disliked_inputs % 2 == 0) {
+                        table_row = $("<tr class=\"table-row-0\">");
+                    }
+                    table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "%</td>");
+                    disliked_inputs += 1;
                     disliked_input_table.append(table_row);
                 }
             }
 
-            if (!disliked_inputs) {
+            if (disliked_inputs == 0) {
                 liked_input_table.removeClass("liked-input-table");
                 liked_input_table.addClass("liked-input-table-only");
                 book_table_div.append(liked_input_table);
             }
-            else if (!liked_inputes) {
+            else if (liked_inputs == 0) {
                 disliked_input_table.removeClass("disliked-input-table");
                 disliked_input_table.addClass("disliked-input-table-only");
                 book_table_div.append(disliked_input_table);
