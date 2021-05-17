@@ -71,6 +71,8 @@
             disliked_input_table.append(disliked_table_header);
 
             const NUM_INPUTS = book.input_sims.length;
+            var liked_inputs = false;
+            var disliked_inputs = false;
             for (var i = 0; i < NUM_INPUTS; i++) {
                 console.log(i);
                 console.log(book.input_sims[i]);
@@ -80,13 +82,28 @@
                 }
                 table_row.append("<td>" + book.input_sims[i].title + "</td><td>" + book.input_sims[i].score + "%</td>");
                 if (book.input_sims[i].liked) {
+                    liked_inputs = true;
                     liked_input_table.append(table_row);
                 } else {
+                    disliked_inputs = true;
                     disliked_input_table.append(table_row);
                 }
             }
-            book_table_div.append(liked_input_table);
-            book_table_div.append(disliked_input_table);
+
+            if (!disliked_inputs) {
+                liked_input_table.removeClass("liked-input-table");
+                liked_input_table.addClass("liked-input-table-only");
+                book_table_div.append(liked_input_table);
+            }
+            else if (!liked_inputes) {
+                disliked_input_table.removeClass("disliked-input-table");
+                disliked_input_table.addClass("disliked-input-table-only");
+                book_table_div.append(disliked_input_table);
+            }
+            else {
+                book_table_div.append(liked_input_table);
+                book_table_div.append(disliked_input_table);
+            }
 
             return book_table_div;
         }

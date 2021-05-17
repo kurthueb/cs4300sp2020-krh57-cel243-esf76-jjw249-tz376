@@ -54,7 +54,7 @@ def cosine_similarity(joined_queries, eligible, work_mat, auth_mat, positive_que
             raw_similarity = np.dot(work_mat[query_id], work_mat[work])
             raw_similarity = math.floor((raw_similarity - (-1))/2*100)
             liked_or_disliked = query_id in positive_query_works
-            title = works[work]["title"]
+            title = works[query_id]["title"]
             scores_by_query[work].append({"liked": liked_or_disliked, "title": title, "score": raw_similarity})
 
         for author_id in query_authors:
